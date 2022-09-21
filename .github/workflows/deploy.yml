@@ -1,0 +1,45 @@
+name: "Initialize"
+
+on:
+  push:
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+       - name: "🛃 Checkout Linux Deploy 🛃"
+         uses: actions/checkout@main
+       
+       - name: "⛔️ Cancel Duplicate Runs ⛔️"
+         uses: styfle/cancel-workflow-action@0.9.0
+         with:
+            all_but_latest: true
+            access_token: $
+       - name: "📈 Initialize Linux Deploy 📉"
+         continue-on-error: true
+         run: |
+           git config --global user.name $
+           git config --global user.email $
+           git config --global credential.helper store
+           echo "https://$:$@github.com" > ~/.git-credentials
+       - name: "🧬 Clone Repository 🧬"
+         continue-on-error: true
+         run: |
+           git clone https://$:$@$ telerepo
+       - name: "Running Linux Server 🏃‍♂️💨💨"
+         timeout-minutes: 350
+         continue-on-error: true
+         run: |
+           cd telerepo
+           docker build . -t tele-vps
+           docker run --env CONFIG_FILE_URL=$ tele-vps
+       - name: "♻️ Re-Run Linux Server ♻️"
+         continue-on-error: true
+         run: |
+              git clone https://github.com/${GITHUB_REPOSITORY} loop
+              cd loop || exit 1
+              echo $(date -u +%T%P) >> loop.txt
+              git add loop.txt
+              git commit -m "Tele-VPS : Re-Run $(date -u +%D-%T%P)"
+              git push -q https://$@github.com/${GITHUB_REPOSITORY} HEAD:main
